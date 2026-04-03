@@ -105,7 +105,7 @@ function render(result) {
   result.scored.forEach(r => {
     const tr = document.createElement('tr');
     const memo = [
-      r.posInfo ? `ライン${r.posInfo.team + 1}-${r.posInfo.pos + 1番手` : '単騎',
+      r.posInfo ? `ライン${r.posInfo.team + 1}-${r.posInfo.pos + 1}番手` : '単騎',
       r.style,
       `得点${r.score}`
     ].join(' / ');
