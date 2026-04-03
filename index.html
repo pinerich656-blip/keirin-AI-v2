@@ -17,25 +17,34 @@
 
     <section class="card">
       <h2>入力</h2>
-      <label>開催・レース名</label>
+
+      <label for="raceName">開催・レース名</label>
       <input id="raceName" type="text" placeholder="例: 小倉 ミッドナイト 8R" />
 
-      <label>出走データ（CSV）</label>
-      <textarea id="csvInput" rows="10" placeholder="車番,得点,B,S,脚質,勝率,2連対率,3連対率&#10;1,78.82,11,9,逃,75.0,83.3,91.6&#10;2,78.19,16,13,逃,72.7,81.8,86.3"></textarea>
+      <label for="csvInput">出走データ（CSV）</label>
+      <textarea
+        id="csvInput"
+        rows="10"
+        placeholder="車番,得点,B,S,脚質,勝率,2連対率,3連対率&#10;1,78.82,11,9,逃,75.0,83.3,91.6&#10;2,78.19,16,13,逃,72.7,81.8,86.3"
+      ></textarea>
 
-      <label>並び</label>
+      <label for="lineInput">並び</label>
       <input id="lineInput" type="text" placeholder="例: 1-4-5-6/2-7/3" />
 
       <div class="buttonRow">
-        <button id="analyzeBtn">AI判定</button>
-        <button id="sampleBtn" class="secondary">サンプル読込</button>
-        <button id="clearBtn" class="secondary">クリア</button>
+        <button id="analyzeBtn" type="button">AI判定</button>
+        <button id="sampleBtn" type="button" class="secondary">サンプル読込</button>
+        <button id="clearBtn" type="button" class="secondary">クリア</button>
       </div>
     </section>
 
     <section class="card" id="resultCard">
       <h2>結果</h2>
-      <div id="resultEmpty" class="muted">データを入れて「AI判定」を押してください。</div>
+
+      <div id="resultEmpty" class="muted">
+        データを入れて「AI判定」を押してください。
+      </div>
+
       <div id="result" class="hidden">
         <div class="grid two">
           <div>
@@ -58,7 +67,8 @@
                 <th>主導権</th>
                 <th>番手価値</th>
                 <th>後出し力</th>
-                <th>若手指数</th>
+                <th>格上</th>
+                <th>単騎化</th>
                 <th>総合</th>
                 <th>メモ</th>
               </tr>
