@@ -57,6 +57,17 @@
           </div>
         </div>
 
+        <div class="grid two">
+          <div>
+            <h3>本線</h3>
+            <ul id="mainLine" class="bets main-bets"></ul>
+          </div>
+          <div>
+            <h3>対抗・押さえ</h3>
+            <ul id="subLine" class="bets sub-bets"></ul>
+          </div>
+        </div>
+
         <h3>選手スコア</h3>
         <div class="tableWrap">
           <table id="scoreTable">
@@ -76,18 +87,20 @@
             <tbody></tbody>
           </table>
         </div>
-
-        <div class="grid two">
-          <div>
-            <h3>本線</h3>
-            <ul id="mainLine"></ul>
-          </div>
-          <div>
-            <h3>対抗・押さえ</h3>
-            <ul id="subLine"></ul>
-          </div>
-        </div>
       </div>
+    </section>
+
+    <section class="card">
+      <h2>的中結果入力</h2>
+
+      <label for="actualResult">実際の結果（3連単）</label>
+      <input id="actualResult" type="text" placeholder="例: 1-4-6" />
+
+      <div class="buttonRow">
+        <button id="checkResultBtn" type="button">的中チェック</button>
+      </div>
+
+      <div id="hitResult" class="muted">結果を入れて「的中チェック」を押してください。</div>
     </section>
 
     <section class="card">
