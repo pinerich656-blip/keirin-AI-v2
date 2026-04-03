@@ -7,8 +7,11 @@
   --accent: #2563eb;
   --accent-2: #06b6d4;
   --good: #16a34a;
+  --good-bg: rgba(22, 163, 74, 0.18);
   --warn: #f59e0b;
+  --warn-bg: rgba(245, 158, 11, 0.16);
   --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.16);
   --shadow: rgba(0, 0, 0, 0.28);
 }
 
@@ -174,7 +177,7 @@ button.secondary:hover {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 860px;
+  min-width: 900px;
 }
 
 thead {
@@ -233,7 +236,6 @@ ol li {
   color: #e8efff;
 }
 
-/* 軽い強調用 */
 #structureText,
 #conclusionText {
   background: #0d162b;
@@ -244,7 +246,63 @@ ol li {
   color: #f7fbff;
 }
 
-/* モバイル最適化 */
+.bet-main {
+  background: var(--good-bg);
+  border: 1px solid rgba(22, 163, 74, 0.45);
+  border-radius: 10px;
+  padding: 8px 10px;
+  list-style: none;
+  margin: 8px 0;
+}
+
+.bet-sub {
+  background: var(--warn-bg);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: 10px;
+  padding: 8px 10px;
+  list-style: none;
+  margin: 8px 0;
+}
+
+.score-high {
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.score-mid {
+  background: rgba(37, 99, 235, 0.10);
+}
+
+.score-low {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hit-main,
+.hit-sub,
+.hit-miss {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.hit-main {
+  background: var(--good-bg);
+  border: 1px solid rgba(22, 163, 74, 0.45);
+  color: #d8ffe4;
+}
+
+.hit-sub {
+  background: var(--warn-bg);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #ffe9b5;
+}
+
+.hit-miss {
+  background: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #ffd5d5;
+}
+
 @media (max-width: 720px) {
   .container {
     padding: 12px;
@@ -272,6 +330,6 @@ ol li {
   }
 
   table {
-    min-width: 760px;
+    min-width: 820px;
   }
 }
