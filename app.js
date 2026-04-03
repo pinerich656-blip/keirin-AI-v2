@@ -128,7 +128,11 @@ document.getElementById('analyzeBtn').addEventListener('click', () => {
 
     const result = analyzeRace(racers, lineup);
 
-    alert(`本線: ${result.main.join(' / ')}\n構造: ${result.structure}`);
+    document.getElementById('result').classList.remove('hidden');
+    document.getElementById('resultEmpty').classList.add('hidden');
+
+    document.getElementById('structureText').textContent = `構造: ${result.structure}`;
+    document.getElementById('conclusionText').textContent = `本線: ${result.main.join(' / ')}`;
 
   } catch (e) {
     alert('エラー: ' + e.message);
