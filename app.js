@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  let latestResult = null;
+
   function parseCSV(text) {
     const lines = text.trim().split(/\r?\n/).map(l => l.trim()).filter(Boolean);
     if (lines.length < 2) return [];
@@ -183,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `${head.num}-${teamMate1 || other1}-${teamMate2 || other2 || ''}`,
       `${head.num}-${other1}-${teamMate1 || other2 || ''}`,
       `${head.num}-${other1}-${other2 || teamMate1 || ''}`
-    ]).filter(v => !v.endsWith('-'));
+    ]).filter(v => v.split('-').length === 3 && !v.includes('undefined'));
 
     const sub = uniq([
       leader && leader.num !== head.num
@@ -193,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `${bestAnchor.num}-${head.num}-${leader?.num || other1 || ''}`
         : '',
       other2 ? `${head.num}-${other2}-${other3 || teamMate1 || ''}` : ''
-    ]).filter(v => !v.endsWith('-'));
+    ]).filter(v => v.split('-').length === 3 && !v.includes('undefined'));
 
     const conclusion = `${head.num}頭を本線。${leader?.num !== head.num ? ` 主導権候補は${leader?.num}。` : ''}${bestAnchor?.num && bestAnchor.num !== head.num ? ` 番手価値は${bestAnchor.num}が高め。` : ''}`;
 
@@ -206,6 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
       main,
       sub
     };
+  }
+
+  function scoreClass(total) {
+    if (total >= 1.9) return 'score-high';
+    if (total >= 1.5) return 'score-mid';
+    return 'score-low';
   }
 
   function render(result) {
@@ -224,17 +232,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (conclusionText) conclusionText.textContent = result.conclusion;
 
     if (mainLine) {
-      mainLine.innerHTML = result.main.map(v => `<li>${v}</li>`).join('');
+      mainLine.innerHTML = result.main.map(v => `<li class="bet-main">${v}</li>`).join('');
     }
 
     if (subLine) {
-      subLine.innerHTML = result.sub.map(v => `<li>${v}</li>`).join('');
+      subLine.innerHTML = result.sub.map(v => `<li class="bet-sub">${v}</li>`).join('');
     }
 
     if (scoreTableBody) {
       scoreTableBody.innerHTML = '';
       result.scored.forEach(r => {
         const tr = document.createElement('tr');
+        tr.className = scoreClass(r.ai.total);
+
         const memo = [
           r.pos ? `ライン${r.pos.team + 1}-${r.pos.pos + 1}番手` : '単騎',
           r.style,
@@ -254,6 +264,45 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         scoreTableBody.appendChild(tr);
       });
+    }
+  }
+
+  function checkHit() {
+    const actualInput = document.getElementById('actualResult');
+    const hitResult = document.getElementById('hitResult');
+
+    if (!actualInput || !hitResult) return;
+
+    const actual = (actualInput.value || '').trim();
+    if (!actual) {
+      hitResult.className = 'muted';
+      hitResult.textContent = '結果を入力してください。';
+      return;
+    }
+
+    if (!latestResult) {
+      hitResult.className = 'muted';
+      hitResult.textContent = '先にAI判定をしてください。';
+      return;
+    }
+
+    const allPreds = [...latestResult.main, ...latestResult.sub];
+    const isMainHit = latestResult.main.includes(actual);
+    const isSubHit = latestResult.sub.includes(actual);
+    const isHit = allPreds.includes(actual);
+
+    if (isMainHit) {
+      hitResult.className = 'hit-main';
+      hitResult.textContent = `◎ 本線的中: ${actual}`;
+    } else if (isSubHit) {
+      hitResult.className = 'hit-sub';
+      hitResult.textContent = `○ 対抗・押さえ的中: ${actual}`;
+    } else if (isHit) {
+      hitResult.className = 'hit-sub';
+      hitResult.textContent = `○ 的中: ${actual}`;
+    } else {
+      hitResult.className = 'hit-miss';
+      hitResult.textContent = `× 不的中: ${actual}`;
     }
   }
 
@@ -279,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const analyzeBtn = document.getElementById('analyzeBtn');
   const sampleBtn = document.getElementById('sampleBtn');
   const clearBtn = document.getElementById('clearBtn');
+  const checkResultBtn = document.getElementById('checkResultBtn');
 
   if (analyzeBtn) {
     analyzeBtn.addEventListener('click', () => {
@@ -295,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const result = analyzeRace(racers, lineup);
+        latestResult = result;
         render(result);
       } catch (e) {
         alert('エラー: ' + e.message);
@@ -311,15 +362,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const raceName = document.getElementById('raceName');
       const csvInput = document.getElementById('csvInput');
       const lineInput = document.getElementById('lineInput');
+      const actualResult = document.getElementById('actualResult');
+      const hitResult = document.getElementById('hitResult');
       const resultBox = document.getElementById('result');
       const resultEmpty = document.getElementById('resultEmpty');
       const mainLine = document.getElementById('mainLine');
       const subLine = document.getElementById('subLine');
       const scoreTableBody = document.querySelector('#scoreTable tbody');
 
+      latestResult = null;
+
       if (raceName) raceName.value = '';
       if (csvInput) csvInput.value = '';
       if (lineInput) lineInput.value = '';
+      if (actualResult) actualResult.value = '';
+      if (hitResult) {
+        hitResult.className = 'muted';
+        hitResult.textContent = '結果を入れて「的中チェック」を押してください。';
+      }
 
       if (resultBox) resultBox.classList.add('hidden');
       if (resultEmpty) resultEmpty.classList.remove('hidden');
@@ -327,5 +387,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (subLine) subLine.innerHTML = '';
       if (scoreTableBody) scoreTableBody.innerHTML = '';
     });
+  }
+
+  if (checkResultBtn) {
+    checkResultBtn.addEventListener('click', checkHit);
   }
 });
