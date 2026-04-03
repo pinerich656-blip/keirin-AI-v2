@@ -128,11 +128,17 @@ document.getElementById('analyzeBtn').addEventListener('click', () => {
 
     const result = analyzeRace(racers, lineup);
 
+    // 表示ON/OFF
     document.getElementById('result').classList.remove('hidden');
     document.getElementById('resultEmpty').classList.add('hidden');
 
+    // テキスト表示
     document.getElementById('structureText').textContent = `構造: ${result.structure}`;
     document.getElementById('conclusionText').textContent = `本線: ${result.main.join(' / ')}`;
+
+    // ★ここが追加部分（買い目リスト）
+    document.getElementById('mainLine').innerHTML =
+      result.main.map(v => `<li>${v}</li>`).join('');
 
   } catch (e) {
     alert('エラー: ' + e.message);
