@@ -356,6 +356,24 @@
     .filter(Boolean);
 }
 
+function isNum(s) {
+  return /^-?\d+(\.\d+)?$/.test(s);
+}
+
+function normalizeCar(raw) {
+  const s = String(raw).trim();
+  if (/^([1-9])\1$/.test(s)) return parseInt(s[0], 10);
+  if (/^[1-9]$/.test(s)) return parseInt(s, 10);
+  return null;
+}
+
+function formatVal(v, digits = 2) {
+  if (v === '' || v === null || typeof v === 'undefined') return '';
+  const n = Number(v);
+  return Number.isFinite(n) ? n.toFixed(digits) : '';
+}
+      
+      
 function convertTableStyle(lines) {
   const rows = [];
 
