@@ -208,15 +208,6 @@
       color: #eef4ff;
     }
 
-    code {
-      background: #0d162b;
-      padding: 2px 6px;
-      border-radius: 6px;
-      border: 1px solid var(--line);
-      color: #dbe8ff;
-      font-size: 12px;
-    }
-
     #structureText,
     #conclusionText,
     #csvPreview {
@@ -352,11 +343,11 @@
         <div class="grid two">
           <div>
             <h3>本線</h3>
-            <ul id="mainLine" class="bets main-bets"></ul>
+            <ul id="mainLine"></ul>
           </div>
           <div>
             <h3>対抗・押さえ</h3>
-            <ul id="subLine" class="bets sub-bets"></ul>
+            <ul id="subLine"></ul>
           </div>
         </div>
 
@@ -431,11 +422,13 @@
         const re = new RegExp(style + '([0-9]{6,})');
         const m = line.match(re);
         if (!m) return { b: '', s: '' };
+
         const digits = m[1];
         const c1 = parseInt(digits.slice(0, 2), 10);
         const c2 = parseInt(digits.slice(2, 4), 10);
         const c3 = parseInt(digits.slice(4, 6), 10);
         const candidates = [c1, c2, c3].filter(x => !isNaN(x) && x >= 0 && x <= 30);
+
         let b = '', s = '';
         if (style === '逃') {
           b = candidates.length ? Math.max(...candidates) : '';
@@ -452,14 +445,20 @@
 
       function convertTableStyle(lines) {
         const rows = [];
+
         for (let i = 0; i < lines.length; i++) {
           const car1 = normalizeCar(lines[i]);
           const car2 = normalizeCar(lines[i + 1]);
+
           if (car1 === null || car2 === null || car1 !== car2) continue;
 
+          const profileLine = lines[i + 3] || '';
           const scoreLine = lines[i + 5] || '';
           const styleLine = lines[i + 6] || '';
-          if (!isNum(scoreLine) || !['逃', '追', '両'].includes(styleLine)) continue;
+
+          if (!profileLine.includes('/')) continue;
+          if (!isNum(scoreLine)) continue;
+          if (!['逃', '追', '両'].includes(styleLine)) continue;
 
           const car = car1;
           const score = parseFloat(scoreLine);
@@ -467,32 +466,33 @@
 
           const nums = [];
           let j = i + 7;
-          while (j < lines.length && nums.length < 10) {
+
+          while (j < lines.length && nums.length < 13) {
             if (isNum(lines[j])) nums.push(parseFloat(lines[j]));
             j++;
           }
 
-          let b = '', s = '', win = '', ren2 = '', ren3 = '';
+          let s = '';
+          let b = '';
+          let win = '';
+          let ren2 = '';
+          let ren3 = '';
+
           if (nums.length >= 6) {
             s = nums[4];
             b = nums[5];
           }
 
-          const rates = [];
-          while (j < lines.length && rates.length < 3) {
-            if (isNum(lines[j])) rates.push(parseFloat(lines[j]));
-            j++;
-          }
-
-          if (rates.length >= 3) {
-            win = rates[0];
-            ren2 = rates[1];
-            ren3 = rates[2];
+          if (nums.length >= 13) {
+            win = nums[10];
+            ren2 = nums[11];
+            ren3 = nums[12];
           }
 
           rows.push({ car, score, b, s, style, win, ren2, ren3 });
           i = j - 1;
         }
+
         return rows;
       }
 
@@ -531,12 +531,20 @@
 
       function convertRawToCsv(raw) {
         const lines = splitLines(raw);
+
         let rows = convertTableStyle(lines);
         if (!rows.length) {
           rows = convertLinkedStyle(lines);
         }
 
-        rows.sort((a, b) => a.car - b.car);
+        const rowMap = new Map();
+        rows.forEach(r => {
+          if (!rowMap.has(r.car) || Number(r.score) > 0) {
+            rowMap.set(r.car, r);
+          }
+        });
+
+        rows = [...rowMap.values()].sort((a, b) => a.car - b.car);
 
         if (!rows.length) return '';
 
