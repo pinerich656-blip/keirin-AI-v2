@@ -2,446 +2,575 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>Keirin AI</title>
+  <title>KEIRIN AI 完全版</title>
   <style>
-    :root {
-      --bg: #0b1220;
-      --card: #121c33;
-      --line: #243352;
-      --text: #ffffff;
-      --muted: #9fb0d1;
-      --accent: #2563eb;
-      --good-bg: rgba(22, 163, 74, 0.18);
-      --warn-bg: rgba(245, 158, 11, 0.16);
-      --danger-bg: rgba(239, 68, 68, 0.16);
-      --shadow: rgba(0, 0, 0, 0.28);
+    :root{
+      --bg:#f5f5f7;
+      --bg2:#ece8df;
+      --card:rgba(255,255,255,.92);
+      --text:#1f2937;
+      --line:#e7e5e4;
+      --navy:#111827;
+      --slate:#334155;
+      --gold:#bfa46f;
+      --gold2:#e7d6aa;
+      --wine:#6b3144;
+      --forest:#1f4d44;
+      --danger:#b91c1c;
     }
-
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(180deg, #08111f 0%, #0d1730 100%);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.5;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:linear-gradient(135deg,var(--bg),var(--bg2));
     }
-    body { min-height: 100vh; }
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 16px;
+    .app{max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:36px}
+    .header{
+      color:#fff;padding:20px 14px 22px;
+      background:linear-gradient(135deg,var(--navy),var(--slate));
+      border-bottom-left-radius:26px;border-bottom-right-radius:26px
     }
-    header { margin-bottom: 16px; }
-    h1 {
-      margin: 0 0 6px;
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
+    .header h1{margin:0;font-size:24px}
+    .header p{margin:6px 0 0;font-size:12px;opacity:.9}
+    .card{
+      background:var(--card);margin:12px;border-radius:22px;padding:14px;
+      box-shadow:0 10px 26px rgba(0,0,0,.08);border:1px solid rgba(191,164,111,.18)
     }
-    .subtitle {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
+    .section{font-weight:800;font-size:14px;margin-bottom:8px}
+    .row{display:flex;gap:8px}
+    .row>*{flex:1}
+    .grid5{display:grid;grid-template-columns:1.2fr .8fr .8fr .9fr .9fr;gap:8px}
+    input,select,button,textarea{
+      width:100%;padding:11px 10px;border-radius:14px;font-size:16px;box-sizing:border-box
     }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 10px 28px var(--shadow);
+    input,select,textarea{
+      border:1.5px solid #ddd6c9;background:#fff
     }
-    h2 {
-      margin: 0 0 12px;
-      font-size: 20px;
+    textarea{min-height:130px;resize:vertical}
+    button{border:none;color:#fff;font-weight:800}
+    .btn-main{background:linear-gradient(135deg,var(--navy),var(--wine))}
+    .btn-sub{background:linear-gradient(135deg,#64748b,#475569)}
+    .btn-green{background:linear-gradient(135deg,var(--forest),#2c6a5f)}
+    .kpiWrap{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .kpi{border-radius:18px;padding:12px;text-align:center;color:#fff;font-weight:800}
+    .kpi:nth-child(1){background:linear-gradient(135deg,var(--navy),#374151)}
+    .kpi:nth-child(2){background:linear-gradient(135deg,var(--wine),#7c4a5e)}
+    .kpi:nth-child(3){background:linear-gradient(135deg,var(--forest),#2c6a5f)}
+    .kpi .label{font-size:12px;opacity:.9}
+    .kpi .value{font-size:22px;margin-top:4px}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{
+      padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;font-size:14px
     }
-    h3 {
-      margin: 14px 0 8px;
-      font-size: 15px;
-      color: #dce7ff;
+    .badge{
+      display:inline-block;padding:7px 11px;border-radius:999px;margin:4px;color:#fff;font-weight:800
     }
-    label {
-      display: block;
-      margin: 10px 0 6px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
+    .bet{background:linear-gradient(135deg,var(--forest),#255d53)}
+    .warn{background:linear-gradient(135deg,var(--wine),#8f4b61)}
+    .tip{background:linear-gradient(135deg,var(--navy),#3f4d63)}
+    .gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#111827}
+    .notice{
+      font-size:12px;line-height:1.7;background:linear-gradient(135deg,#fafaf9,#f3f4f6);
+      border:1.5px dashed #d6d3d1;padding:12px;border-radius:16px
     }
-    input, textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #0d162b;
-      color: var(--text);
-      padding: 12px 14px;
-      font-size: 14px;
-      outline: none;
+    .rider{
+      border:1px solid #ebe7de;border-radius:18px;padding:10px;margin-bottom:9px;background:#fff
     }
-    textarea {
-      resize: vertical;
-      min-height: 140px;
+    .title{font-weight:800;margin-bottom:8px;color:#374151}
+    .styleBox{display:flex;gap:6px;margin-top:8px}
+    .styleBox label{flex:1;padding:8px 4px;text-align:center;border-radius:12px;color:#fff;font-weight:800}
+    .styleBox label:nth-child(1){background:linear-gradient(135deg,#7a3b4e,#8d5568)}
+    .styleBox label:nth-child(2){background:linear-gradient(135deg,#364152,#4b5563)}
+    .styleBox label:nth-child(3){background:linear-gradient(135deg,#305b53,#3b6f66)}
+    .hero{
+      background:linear-gradient(135deg,var(--navy),#283447);color:#fff;border-radius:22px;
+      padding:18px;text-align:center;position:relative;overflow:hidden
     }
-    input:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
+    .hero:before{
+      content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(231,214,170,.18),transparent)
     }
-    ::placeholder { color: #7f92b7; }
-
-    .buttonRow {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 14px;
+    .hero .mini,.hero .big,.hero .sub{position:relative}
+    .hero .mini{font-size:12px;opacity:.86}
+    .hero .big{font-size:42px;font-weight:900;line-height:1;margin-top:4px}
+    .hero .sub{font-size:13px;opacity:.95;margin-top:6px;color:var(--gold2)}
+    .badges{display:flex;flex-wrap:wrap;gap:6px}
+    .meter{height:14px;background:#ece7dc;border-radius:999px;overflow:hidden;border:1px solid #d6c9ae}
+    .meter-fill{
+      height:100%;width:0;background:linear-gradient(90deg,#8f4b61,#bfa46f,#255d53);transition:width .2s ease
     }
-    button {
-      appearance: none;
-      border: none;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      background: var(--accent);
-      color: white;
-    }
-    button.secondary {
-      background: #233453;
-      color: #d9e6ff;
-    }
-
-    .grid {
-      display: grid;
-      gap: 12px;
-    }
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .hidden {
-      display: none !important;
-    }
-
-    .tableWrap {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #0d162b;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 900px;
-    }
-    thead {
-      background: #13203b;
-    }
-    th, td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      font-size: 13px;
-      vertical-align: top;
-    }
-    th {
-      color: #dbe8ff;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    td { color: #f5f9ff; }
-
-    ul {
-      margin: 8px 0 0;
-      padding-left: 18px;
-    }
-    li {
-      margin: 6px 0;
-      color: #eef4ff;
-    }
-
-    #structureText,
-    #conclusionText,
-    #csvPreview {
-      background: #0d162b;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      min-height: 52px;
-      color: #f7fbff;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .bet-main {
-      background: var(--good-bg);
-      border: 1px solid rgba(22, 163, 74, 0.45);
-      border-radius: 10px;
-      padding: 8px 10px;
-      list-style: none;
-      margin: 8px 0;
-    }
-    .bet-sub {
-      background: var(--warn-bg);
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      border-radius: 10px;
-      padding: 8px 10px;
-      list-style: none;
-      margin: 8px 0;
-    }
-
-    .score-high { background: rgba(22, 163, 74, 0.12); }
-    .score-mid { background: rgba(37, 99, 235, 0.10); }
-    .score-low { background: rgba(255, 255, 255, 0.02); }
-
-    .hit-main,
-    .hit-sub,
-    .hit-miss {
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 700;
-    }
-    .hit-main {
-      background: var(--good-bg);
-      border: 1px solid rgba(22, 163, 74, 0.45);
-      color: #d8ffe4;
-    }
-    .hit-sub {
-      background: var(--warn-bg);
-      border: 1px solid rgba(245, 158, 11, 0.45);
-      color: #ffe9b5;
-    }
-    .hit-miss {
-      background: var(--danger-bg);
-      border: 1px solid rgba(239, 68, 68, 0.45);
-      color: #ffd5d5;
-    }
-
-    @media (max-width: 720px) {
-      .container { padding: 12px; }
-      h1 { font-size: 24px; }
-      .card { padding: 14px; border-radius: 14px; }
-      .grid.two { grid-template-columns: 1fr; }
-      button { width: 100%; }
-      .buttonRow { flex-direction: column; }
-      table { min-width: 820px; }
+    .starline{font-size:22px;letter-spacing:1px;color:#bfa46f;text-align:center;margin-top:8px}
+    .small,.memo-help{font-size:12px;color:#6b7280;line-height:1.7}
+    .statbox{
+      background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:10px;margin-top:8px;font-size:12px;line-height:1.8
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <header>
-      <h1>Keirin-AI β</h1>
-      <p class="subtitle">元データ貼り付け → CSV変換 → 並び入力 → AI判定</p>
-    </header>
+<div class="app">
+  <div class="header">
+    <h1>KEIRIN AI 完全版</h1>
+    <p>元データ貼付 → 自動変換 → 自動入力 → 展開AI予想 → 学習メモ補正</p>
+  </div>
 
-    <section class="card">
-      <h2>① 元データ入力</h2>
-      <label for="rawInput">元データをそのまま貼り付け</label>
-      <textarea id="rawInput" rows="12" placeholder="元データをそのまま貼り付け"></textarea>
+  <div class="card">
+    <div class="section">① 元データを貼る</div>
+    <textarea id="rawSource" placeholder="元データをそのまま貼り付け"></textarea>
+    <div class="small">縦表形式と連結形式の両対応。変換できない時は元データを広めに貼ってください。</div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnConvertApply" class="btn-green">変換して自動入力</button>
+      <button id="btnSampleRaw" class="btn-sub">元データ例</button>
+    </div>
+  </div>
 
-      <div class="buttonRow">
-        <button id="convertBtn" type="button">変換する</button>
-        <button id="sampleRawBtn" type="button" class="secondary">変換サンプル</button>
+  <div class="card">
+    <div class="section">② 変換結果</div>
+    <textarea id="convertedText" placeholder="ここに変換結果"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button id="btnApplyConverted" class="btn-main">変換結果を反映</button>
+      <button id="btnSamplePaste" class="btn-sub">整形済み例</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">基本設定</div>
+    <div class="row">
+      <input id="race" placeholder="例: 取手 7R" />
+      <select id="mode">
+        <option value="normal">通常</option>
+        <option value="midnight">ミッドナイト</option>
+      </select>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <input id="line" value="1-2-3 / 4-5 / 6 / 7" placeholder="例: 5-3 / 2-7 / 4-1-6" />
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">③ 入力</div>
+    <div id="riders"></div>
+    <div class="small">自動入力後、必要なら手修正してください。</div>
+    <div class="row">
+      <button id="btnClear" class="btn-sub">全消去</button>
+      <button id="btnAI" class="btn-main">AI予想</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">④ 結果学習メモ</div>
+    <textarea id="learningMemo" placeholder="例&#10;結果 2-7-1&#10;番手7を軽視&#10;5の逃げを買いすぎ&#10;1の残り目を見落とし"></textarea>
+    <div class="memo-help">「番手強い」「逃げ過大」「追込残り」「混戦」「単騎注意」などを入れると蓄積補正に反映します。</div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnApplyLearning" class="btn-green">学習メモを蓄積</button>
+      <button id="btnSampleLearning" class="btn-sub">学習メモ例</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnResetLearning" class="btn-sub">学習をリセット</button>
+      <button id="btnExportLearning" class="btn-main">学習状態を確認</button>
+    </div>
+    <div class="statbox" id="learningStats">累積学習：未読込</div>
+  </div>
+
+  <div class="card">
+    <div class="section">本命表示</div>
+    <div class="hero">
+      <div class="mini">AI本命</div>
+      <div class="big" id="hero">-</div>
+      <div class="sub" id="heroSub">KEIRIN AI 完全版</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">本命信頼度メーター</div>
+    <div class="meter"><div class="meter-fill" id="trustFill"></div></div>
+    <div class="starline" id="trustStars">☆☆☆☆☆</div>
+    <div class="small" id="trustText" style="text-align:center;margin-top:6px">信頼度 -</div>
+    <div id="dangerAlert" style="text-align:center;margin-top:8px"></div>
+  </div>
+
+  <div class="card">
+    <div class="section">実戦サマリー</div>
+    <div class="badges">
+      <span class="badge gold" id="tenkai">展開予測 -</span>
+      <span class="badge tip" id="collapse">ライン崩れ警告 -</span>
+      <span class="badge warn" id="midAdj">ミッドナイト補正 -</span>
+      <span class="badge bet" id="ticketCount">車券点数 -</span>
+      <span class="badge warn" id="leadCount">先行人数 -</span>
+    </div>
+    <div id="learnSummary" class="memo-help" style="margin-top:10px">学習補正：なし</div>
+  </div>
+
+  <div class="card">
+    <div class="section">予想結果</div>
+    <div class="kpiWrap">
+      <div class="kpi"><div class="label">本命</div><div class="value" id="honmei">-</div></div>
+      <div class="kpi"><div class="label">回収率AI</div><div class="value" id="roi">-</div></div>
+      <div class="kpi"><div class="label">判断</div><div class="value" id="act">-</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section">AI順位</div>
+    <table class="table">
+      <thead><tr><th>順位</th><th>車番</th><th>指数</th><th>位置</th></tr></thead>
+      <tbody id="rank"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section">買い目</div>
+    <div id="bets"></div>
+    <div id="hole"></div>
+  </div>
+
+  <div class="card">
+    <div class="section">AIコメント</div>
+    <div id="comment" class="notice">入力してAI予想を押してください。</div>
+  </div>
+</div>
+
+<script>
+const LEARNING_KEY = "keirin_ai_complete_v1";
+
+let cumulativeLearning = {
+  bankerBoost: 0,
+  runnerPenalty: 0,
+  chaserThirdBoost: 0,
+  chaosBoost: 0,
+  lonePenalty: 0,
+  raceCount: 0,
+  lastMemo: ""
+};
+
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+function riderHTML(i) {
+  return `
+    <div class="rider">
+      <div class="title">${i}番</div>
+      <div class="grid5">
+        <input id="score${i}" inputmode="decimal" placeholder="得点">
+        <input id="b${i}" inputmode="numeric" placeholder="B">
+        <input id="s${i}" inputmode="numeric" placeholder="S">
+        <input id="win${i}" inputmode="decimal" placeholder="勝率">
+        <input id="ren2${i}" inputmode="decimal" placeholder="2連率">
       </div>
-
-      <h3>変換結果（CSV）</h3>
-      <div id="csvPreview">ここにCSVが出ます</div>
-    </section>
-
-    <section class="card">
-      <h2>② AI入力</h2>
-
-      <label for="raceName">開催・レース名</label>
-      <input id="raceName" type="text" placeholder="例: 小倉 ミッドナイト 8R" />
-
-      <label for="csvInput">出走データ（CSV）</label>
-      <textarea id="csvInput" rows="10" placeholder="変換結果がここに入ります"></textarea>
-
-      <label for="lineInput">並び</label>
-      <input id="lineInput" type="text" placeholder="例: 1-4-5-6/2-7/3" />
-
-      <div class="buttonRow">
-        <button id="analyzeBtn" type="button">AI判定</button>
-        <button id="sampleBtn" type="button" class="secondary">AIサンプル</button>
-        <button id="clearBtn" type="button" class="secondary">全クリア</button>
+      <div class="row" style="margin-top:8px">
+        <input id="ren3${i}" inputmode="decimal" placeholder="3連率">
       </div>
-    </section>
-
-    <section class="card" id="resultCard">
-      <h2>③ AI結果</h2>
-
-      <div id="resultEmpty" class="muted">
-        データを入れて「AI判定」を押してください。
+      <div class="styleBox">
+        <label><input type="radio" name="style${i}" value="逃">逃</label>
+        <label><input type="radio" name="style${i}" value="追">追</label>
+        <label><input type="radio" name="style${i}" value="両" checked>両</label>
       </div>
+    </div>
+  `;
+}
 
-      <div id="result" class="hidden">
-        <div class="grid two">
-          <div>
-            <h3>レース構造</h3>
-            <div id="structureText"></div>
-          </div>
-          <div>
-            <h3>結論</h3>
-            <div id="conclusionText"></div>
-          </div>
-        </div>
+function getStyle(i) {
+  const e = document.querySelector(`input[name="style${i}"]:checked`);
+  return e ? e.value : "両";
+}
 
-        <div class="grid two">
-          <div>
-            <h3>本線</h3>
-            <ul id="mainLine"></ul>
-          </div>
-          <div>
-            <h3>対抗・押さえ</h3>
-            <ul id="subLine"></ul>
-          </div>
-        </div>
+function parseLine(line) {
+  const groups = (line || "").replace(/\s+/g, "").split("/").filter(Boolean);
+  const map = {};
+  const sizes = [];
 
-        <h3>選手スコア</h3>
-        <div class="tableWrap">
-          <table id="scoreTable">
-            <thead>
-              <tr>
-                <th>車番</th>
-                <th>前取り</th>
-                <th>主導権</th>
-                <th>番手価値</th>
-                <th>後出し力</th>
-                <th>格上</th>
-                <th>単騎化</th>
-                <th>総合</th>
-                <th>メモ</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+  groups.forEach(g => {
+    const a = g.split("-").filter(Boolean);
+    sizes.push(a.length);
+    if (a.length === 1) {
+      map[a[0]] = "単騎";
+    } else if (a.length === 2) {
+      map[a[0]] = "先行";
+      map[a[1]] = "番手";
+    } else if (a.length >= 3) {
+      map[a[0]] = "先行";
+      map[a[1]] = "番手";
+      for (let i = 2; i < a.length; i++) map[a[i]] = "3番手";
+    }
+  });
 
-    <section class="card">
-      <h2>④ 的中結果入力</h2>
+  return { map, sizes };
+}
 
-      <label for="actualResult">実際の結果（3連単）</label>
-      <input id="actualResult" type="text" placeholder="例: 1-4-6" />
+function roiJudge(arr) {
+  const s1 = (arr[0]?.ai || 0) - (arr[1]?.ai || 0);
+  const s2 = (arr[1]?.ai || 0) - (arr[2]?.ai || 0);
+  const topRun = arr[0]?.style === "逃";
+  if (s1 >= 12 && s2 >= 4 && !topRun) return ["A+", "買い"];
+  if (s1 >= 8 && s2 >= 2) return ["A", "買い"];
+  if (s1 >= 4) return ["B", "抑え"];
+  return ["C", "見送り"];
+}
 
-      <div class="buttonRow">
-        <button id="checkResultBtn" type="button">的中チェック</button>
-      </div>
+function tenkaiPredictScenario(scenario, head, second) {
+  if (scenario === "差し") return `${second}先行 → ${head}差し本線`;
+  if (scenario === "捲り") return `${head}捲り本線`;
+  return `${head}主導 → ${second}連動`;
+}
 
-      <div id="hitResult" class="muted">結果を入れて「的中チェック」を押してください。</div>
-    </section>
-  </main>
+function leadCounter(arr) {
+  const leads = arr.filter(x => x.style === "逃").length;
+  if (leads >= 5) return { count: leads, label: `先行人数 ${leads}人 荒れ濃厚` };
+  if (leads === 4) return { count: leads, label: `先行人数 ${leads}人 荒れ注意` };
+  if (leads === 3) return { count: leads, label: `先行人数 ${leads}人 やや混戦` };
+  return { count: leads, label: `先行人数 ${leads}人` };
+}
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      let latestResult = null;
+function collapseWarn(arr, sizes) {
+  const leaders = arr.filter(x => x.style === "逃" && x.b >= 8).length;
+  const spread = (arr[0]?.ai || 0) - (arr[2]?.ai || 0);
+  if (leaders >= 2 || spread < 8 || sizes.every(x => x <= 2)) return "高";
+  if (spread < 14) return "中";
+  return "低";
+}
 
-      function splitLines(text) {
-        return text.split(/\r?\n/).map(s => s.replace(/\u00A0/g, ' ').trim()).filter(Boolean);
-      }
+function midnightAdjust(mode, arr) {
+  if (mode !== "midnight") return { label: "なし", bonus: {} };
+  const bonus = {};
+  arr.forEach(x => {
+    bonus[x.car] = (x.style === "追" ? 2 : (x.pos === "番手" ? 2 : 0));
+  });
+  return { label: "追込・番手寄り", bonus };
+}
 
-      function isNum(s) {
-        return /^-?\d+(\.\d+)?$/.test(s);
-      }
+function ticketCount(act, collapse, leadCount) {
+  if (act === "見送り") return 0;
+  if (leadCount >= 5) return 8;
+  if (collapse === "高") return 7;
+  if (collapse === "中") return 5;
+  return 4;
+}
 
-      function normalizeCar(raw) {
-        const s = String(raw).trim();
-        if (/^([1-9])\1$/.test(s)) return parseInt(s[0], 10);
-        if (/^[1-9]$/.test(s)) return parseInt(s, 10);
-        return null;
-      }
+function calcTrust(arr, leadInfo, collapse, mode, scenario) {
+  const top = arr[0];
+  const second = arr[1] || { ai: 0 };
+  const third = arr[2] || { ai: 0 };
+  let score = 0;
 
-      function detectStyle(line) {
-        if (line.includes('逃')) return '逃';
-        if (line.includes('追')) return '追';
-        if (line.includes('両')) return '両';
-        return '両';
-      }
+  const s1 = top.ai - second.ai;
+  const s2 = second.ai - third.ai;
 
-      function detectScore(line) {
-        const m = line.match(/([◎○▲△×注]?)(\d{2,3}\.\d{2})/);
-        return m ? parseFloat(m[2]) : 0;
-      }
+  if (s1 >= 16) score += 35;
+  else if (s1 >= 10) score += 25;
+  else if (s1 >= 6) score += 15;
+  else score += 5;
 
-      function detectBandSFromLinked(line, style) {
-        const re = new RegExp(style + '([0-9]{6,})');
-        const m = line.match(re);
-        if (!m) return { b: '', s: '' };
+  if (s2 >= 6) score += 10;
+  else if (s2 >= 3) score += 6;
 
-        const digits = m[1];
-        const c1 = parseInt(digits.slice(0, 2), 10);
-        const c2 = parseInt(digits.slice(2, 4), 10);
-        const c3 = parseInt(digits.slice(4, 6), 10);
-        const candidates = [c1, c2, c3].filter(x => !isNaN(x) && x >= 0 && x <= 30);
+  if (top.pos === "番手") score += 18;
+  else if (top.pos === "3番手") score += 5;
+  else if (top.pos === "単騎") score -= 12;
 
-        let b = '', s = '';
-        if (style === '逃') {
-          b = candidates.length ? Math.max(...candidates) : '';
-          s = candidates.length > 1 ? Math.min(...candidates.slice(0, 2)) : '';
-        } else if (style === '追') {
-          b = '';
-          s = candidates.length ? Math.min(...candidates) : '';
-        } else {
-          b = candidates.length ? candidates[0] : '';
-          s = candidates.length > 1 ? candidates[1] : '';
-        }
-        return { b, s };
-      }
+  if (top.style === "追") score += 10;
+  if (top.style === "逃" && leadInfo.count >= 3) score -= 14;
 
-      function convertTableStyle(lines) {
-        const rows = [];
+  if (collapse === "高") score -= 15;
 
-        for (let i = 0; i < lines.length; i++) {
-          const frameNo = normalizeCar(lines[i]);
-          const carNo = normalizeCar(lines[i + 1]);
+  if (mode === "midnight" && top.style === "追") score += 8;
+  if (mode === "midnight" && top.style === "逃") score -= 6;
 
-          if (frameNo === null || carNo === null) continue;
+  if (scenario === "差し") score += 8;
+  if (scenario === "捲り" && top.style === "逃") score -= 4;
 
-          const profileLine = lines[i + 3] || '';
-          const scoreLine = lines[i + 5] || '';
-          const styleLine = lines[i + 6] || '';
+  score = Math.max(0, Math.min(100, score));
 
-          if (!profileLine.includes('/')) continue;
-          if (!isNum(scoreLine)) continue;
-          if (!['逃', '追', '両'].includes(styleLine)) continue;
+  let stars = "★☆☆☆☆";
+  let text = "見送り寄り";
+  if (score >= 85) { stars = "★★★★★"; text = "鉄板寄り"; }
+  else if (score >= 70) { stars = "★★★★☆"; text = "強め"; }
+  else if (score >= 50) { stars = "★★★☆☆"; text = "普通"; }
+  else if (score >= 30) { stars = "★★☆☆☆"; text = "注意"; }
 
-          const score = parseFloat(scoreLine);
-          const style = styleLine;
+  return { score, stars, text };
+}
 
-          const s = isNum(lines[i + 11]) ? parseFloat(lines[i + 11]) : '';
-          const b = isNum(lines[i + 12]) ? parseFloat(lines[i + 12]) : '';
-          const win = isNum(lines[i + 17]) ? parseFloat(lines[i + 17]) : '';
-          const ren2 = isNum(lines[i + 18]) ? parseFloat(lines[i + 18]) : '';
-          const ren3 = isNum(lines[i + 19]) ? parseFloat(lines[i + 19]) : '';
+function dangerText(top, trust, leadInfo, collapse) {
+  const danger = [];
+  if (trust.score < 35) danger.push("⚠ 本命危険");
+  if (top.style === "逃" && leadInfo.count >= 3) danger.push("⚠ 先行争い注意");
+  if (top.style === "逃" && (top.b || 0) < 5) danger.push("⚠ 逃げ裏目注意");
+  if (collapse === "高") danger.push("⚠ ライン崩れ注意");
+  if (!danger.length) return `<span class="badge bet">本命は比較的安定</span>`;
+  return danger.map(x => `<span class="badge warn">${x}</span>`).join("");
+}
 
-          rows.push({
-            car: carNo,
-            score,
-            b,
-            s,
-            style,
-            win,
-            ren2,
-            ren3
-          });
+function saveLearning() {
+  localStorage.setItem(LEARNING_KEY, JSON.stringify(cumulativeLearning));
+}
 
-          i = i + 19;
-        }
+function loadLearning() {
+  try {
+    const saved = localStorage.getItem(LEARNING_KEY);
+    if (saved) {
+      const obj = JSON.parse(saved);
+      cumulativeLearning = {
+        bankerBoost: Number(obj.bankerBoost) || 0,
+        runnerPenalty: Number(obj.runnerPenalty) || 0,
+        chaserThirdBoost: Number(obj.chaserThirdBoost) || 0,
+        chaosBoost: Number(obj.chaosBoost) || 0,
+        lonePenalty: Number(obj.lonePenalty) || 0,
+        raceCount: Number(obj.raceCount) || 0,
+        lastMemo: obj.lastMemo || ""
+      };
+    }
+  } catch (e) {}
+  updateLearningStats();
+}
 
-        return rows;
-      }
+function getLearningSummary() {
+  const hits = [];
+  if (cumulativeLearning.bankerBoost) hits.push(`番手+${cumulativeLearning.bankerBoost}`);
+  if (cumulativeLearning.runnerPenalty) hits.push(`逃げ-${cumulativeLearning.runnerPenalty}`);
+  if (cumulativeLearning.chaserThirdBoost) hits.push(`追込残り+${cumulativeLearning.chaserThirdBoost}`);
+  if (cumulativeLearning.chaosBoost) hits.push(`混戦+${cumulativeLearning.chaosBoost}`);
+  if (cumulativeLearning.lonePenalty) hits.push(`単騎-${cumulativeLearning.lonePenalty}`);
+  return hits.length ? "学習補正：" + hits.join(" / ") : "学習補正：なし";
+}
 
-   function convertLinkedStyle(lines) {
+function updateLearningStats() {
+  document.getElementById("learningStats").innerHTML = [
+    `累積学習レース数: ${cumulativeLearning.raceCount}`,
+    `番手強化: +${cumulativeLearning.bankerBoost}`,
+    `逃げ過大抑制: -${cumulativeLearning.runnerPenalty}`,
+    `追込残り強化: +${cumulativeLearning.chaserThirdBoost}`,
+    `混戦補正: +${cumulativeLearning.chaosBoost}`,
+    `単騎不利: -${cumulativeLearning.lonePenalty}`,
+    cumulativeLearning.lastMemo ? `最新メモ: ${cumulativeLearning.lastMemo}` : `最新メモ: なし`
+  ].join("<br>");
+}
+
+function applyLearningMemo(accumulate = true) {
+  const memo = (document.getElementById("learningMemo").value || "").trim();
+  if (!memo) {
+    document.getElementById("learnSummary").textContent = getLearningSummary();
+    return cumulativeLearning;
+  }
+
+  const d = { bankerBoost: 0, runnerPenalty: 0, chaserThirdBoost: 0, chaosBoost: 0, lonePenalty: 0 };
+
+  if (/番手|番手強い|番手重要/.test(memo)) d.bankerBoost += 2;
+  if (/逃げ過大|逃げ買いすぎ|先行過大/.test(memo)) d.runnerPenalty += 2;
+  if (/追込残り|3着残り|残り目/.test(memo)) d.chaserThirdBoost += 2;
+  if (/混戦|もつれ|ライン崩れ/.test(memo)) d.chaosBoost += 2;
+  if (/単騎注意|単騎弱い|単騎不利/.test(memo)) d.lonePenalty += 2;
+  if (/番手7|2-7-1/.test(memo)) d.bankerBoost += 1;
+
+  if (accumulate) {
+    cumulativeLearning.bankerBoost = clamp(cumulativeLearning.bankerBoost + d.bankerBoost, 0, 20);
+    cumulativeLearning.runnerPenalty = clamp(cumulativeLearning.runnerPenalty + d.runnerPenalty, 0, 20);
+    cumulativeLearning.chaserThirdBoost = clamp(cumulativeLearning.chaserThirdBoost + d.chaserThirdBoost, 0, 20);
+    cumulativeLearning.chaosBoost = clamp(cumulativeLearning.chaosBoost + d.chaosBoost, 0, 20);
+    cumulativeLearning.lonePenalty = clamp(cumulativeLearning.lonePenalty + d.lonePenalty, 0, 20);
+    cumulativeLearning.raceCount += 1;
+    cumulativeLearning.lastMemo = memo.replace(/\n/g, " / ").slice(0, 120);
+    saveLearning();
+    updateLearningStats();
+  }
+
+  document.getElementById("learnSummary").textContent = getLearningSummary();
+  return cumulativeLearning;
+}
+
+function resetLearning() {
+  cumulativeLearning = {
+    bankerBoost: 0,
+    runnerPenalty: 0,
+    chaserThirdBoost: 0,
+    chaosBoost: 0,
+    lonePenalty: 0,
+    raceCount: 0,
+    lastMemo: ""
+  };
+  saveLearning();
+  updateLearningStats();
+  document.getElementById("learnSummary").textContent = getLearningSummary();
+  alert("蓄積学習をリセットしました。");
+}
+
+function exportLearning() {
+  alert(JSON.stringify(cumulativeLearning, null, 2));
+}
+
+function splitLines(text) {
+  return text.replace(/\u00A0/g, " ").replace(/\t/g, "\n").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+}
+
+function isNum(s) {
+  return /^-?\d+(\.\d+)?$/.test(s);
+}
+
+function normalizeCar(raw) {
+  const s = String(raw).trim();
+  if (/^([1-9])\1$/.test(s)) return parseInt(s[0], 10);
+  if (/^[1-9]$/.test(s)) return parseInt(s, 10);
+  return null;
+}
+
+function detectStyle(line) {
+  if (line.includes("逃")) return "逃";
+  if (line.includes("追")) return "追";
+  if (line.includes("両")) return "両";
+  return "両";
+}
+
+function detectScore(line) {
+  const m = line.match(/([◎○▲△×注]?)(\d{2,3}\.\d{2})/);
+  return m ? parseFloat(m[2]) : 0;
+}
+
+function convertTableStyle(lines) {
+  const rows = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const carNo = normalizeCar(lines[i]);
+    if (carNo === null) continue;
+
+    let profileIdx = -1;
+    let scoreIdx = -1;
+    let styleIdx = -1;
+
+    for (let j = i; j < Math.min(i + 8, lines.length); j++) {
+      if (profileIdx === -1 && (lines[j] || "").includes("/")) profileIdx = j;
+      if (scoreIdx === -1 && isNum(lines[j]) && /\d{2,3}\.\d{2}/.test(lines[j])) scoreIdx = j;
+      if (styleIdx === -1 && ["逃", "追", "両"].includes(lines[j])) styleIdx = j;
+    }
+
+    if (profileIdx === -1 || scoreIdx === -1 || styleIdx === -1) continue;
+    if (!(profileIdx < scoreIdx && scoreIdx < styleIdx)) continue;
+
+    const score = parseFloat(lines[scoreIdx]);
+    const style = lines[styleIdx];
+
+    const nums = [];
+    let k = styleIdx + 1;
+    while (k < lines.length && nums.length < 13) {
+      if (isNum(lines[k])) nums.push(parseFloat(lines[k]));
+      k++;
+    }
+
+    if (nums.length < 13) continue;
+
+    const s = nums[4];
+    const b = nums[5];
+    const win = nums[10];
+    const ren2 = nums[11];
+    const ren3 = nums[12];
+
+    rows.push({ car: carNo, score, b, s, style, win, ren2, ren3 });
+    i = k - 1;
+  }
+
+  return rows;
+}
+
+function convertLinkedStyle(lines) {
   const rows = [];
 
   for (let i = 0; i < lines.length; i++) {
@@ -449,13 +578,13 @@
     if (car === null) continue;
 
     const candidates = [
-      lines[i + 1] || '',
-      lines[i + 2] || '',
-      lines[i + 3] || '',
-      lines[i + 4] || ''
+      lines[i + 1] || "",
+      lines[i + 2] || "",
+      lines[i + 3] || "",
+      lines[i + 4] || ""
     ];
 
-    let dataLine = '';
+    let dataLine = "";
     for (const line of candidates) {
       if (/\d{2,3}\.\d{2}/.test(line) && /[逃追両]/.test(line)) {
         dataLine = line;
@@ -471,8 +600,8 @@
     const score = parseFloat(m[1]);
     const style = m[2];
     const tail = m[3];
-
     const nums = tail.match(/\d+\.\d+|\d+/g) || [];
+
     if (nums.length < 13) continue;
 
     const s = Number(nums[4]);
@@ -481,337 +610,108 @@
     const ren2 = Number(nums[11]);
     const ren3 = Number(nums[12]);
 
-    rows.push({
-      car,
-      score,
-      b,
-      s,
-      style,
-      win,
-      ren2,
-      ren3
-    });
+    rows.push({ car, score, b, s, style, win, ren2, ren3 });
   }
 
   return rows;
 }
-      function formatVal(v, digits = 2) {
-        if (v === '' || v === null || typeof v === 'undefined') return '';
-        const n = Number(v);
-        return Number.isFinite(n) ? n.toFixed(digits) : '';
-      }
 
-      function convertRawToCsv(raw) {
-        const lines = splitLines(raw);
+function convertRawToRows(raw) {
+  const lines = splitLines(raw);
+  let rows = convertTableStyle(lines);
+  if (!rows.length) rows = convertLinkedStyle(lines);
 
-        let rows = convertTableStyle(lines);
-        if (!rows.length) {
-          rows = convertLinkedStyle(lines);
-        }
+  const rowMap = new Map();
+  rows.forEach(r => {
+    if (!rowMap.has(r.car) || Number(r.score) > 0) {
+      rowMap.set(r.car, r);
+    }
+  });
 
-        const rowMap = new Map();
-        rows.forEach(r => {
-          if (!rowMap.has(r.car) || Number(r.score) > 0) {
-            rowMap.set(r.car, r);
-          }
-        });
+  return [...rowMap.values()].sort((a, b) => a.car - b.car);
+}
 
-        rows = [...rowMap.values()].sort((a, b) => a.car - b.car);
+function rowsToText(rows) {
+  return [
+    "車番,得点,B,S,脚質,勝率,2連対率,3連対率",
+    ...rows.map(r => [
+      r.car,
+      (r.score ?? "") !== "" ? Number(r.score).toFixed(2) : "",
+      r.b ?? "",
+      r.s ?? "",
+      r.style ?? "",
+      (r.win ?? "") !== "" ? Number(r.win).toFixed(1) : "",
+      (r.ren2 ?? "") !== "" ? Number(r.ren2).toFixed(1) : "",
+      (r.ren3 ?? "") !== "" ? Number(r.ren3).toFixed(1) : ""
+    ].join(","))
+  ].join("\n");
+}
 
-        if (!rows.length) return '';
+function applyConvertedText(text) {
+  const lines = text.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  let count = 0;
 
-        const result = [
-          '車番,得点,B,S,脚質,勝率,2連対率,3連対率',
-          ...rows.map(r => [
-            r.car,
-            formatVal(r.score, 2),
-            r.b === '' ? '' : r.b,
-            r.s === '' ? '' : r.s,
-            r.style,
-            formatVal(r.win, 1),
-            formatVal(r.ren2, 1),
-            formatVal(r.ren3, 1)
-          ].join(','))
-        ];
+  lines.forEach((line, idx) => {
+    if (idx === 0 && line.includes("車番")) return;
+    const parts = line.split(",").map(x => x.trim());
+    if (parts.length < 5) return;
 
-        return result.join('\n');
-      }
+    const car = parseInt(parts[0], 10);
+    const score = parseFloat(parts[1]);
+    const b = parts[2];
+    const s = parts[3];
+    const style = parts[4];
+    const win = parts[5] || "";
+    const ren2 = parts[6] || "";
+    const ren3 = parts[7] || "";
 
-      function parseCSV(text) {
-        const lines = text.trim().split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-        if (lines.length < 2) return [];
+    if (isNaN(car) || car < 1 || car > 9 || isNaN(score)) return;
 
-        const headers = lines[0].split(',').map(h => h.trim());
+    document.getElementById("score" + car).value = score;
+    document.getElementById("b" + car).value = b;
+    document.getElementById("s" + car).value = s;
+    document.getElementById("win" + car).value = win;
+    document.getElementById("ren2" + car).value = ren2;
+    document.getElementById("ren3" + car).value = ren3;
 
-        return lines.slice(1).map(line => {
-          const cols = line.split(',').map(c => c.trim());
-          const obj = {};
-          headers.forEach((h, i) => { obj[h] = cols[i]; });
+    const radio = document.querySelector(`input[name="style${car}"][value="${style}"]`);
+    if (radio) radio.checked = true;
+    count++;
+  });
 
-          return {
-            num: Number(obj['車番']),
-            score: Number(obj['得点']),
-            B: Number(obj['B']),
-            S: Number(obj['S']),
-            style: obj['脚質'],
-            win: Number(obj['勝率']),
-            quinella: Number(obj['2連対率']),
-            trio: Number(obj['3連対率'])
-          };
-        }).filter(r => !Number.isNaN(r.num));
-      }
+  return count;
+}
 
-      function parseLineup(text) {
-        return text
-          .split('/')
-          .map(t => t.trim())
-          .filter(Boolean)
-          .map(team =>
-            team
-              .split('-')
-              .map(v => Number(v.trim()))
-              .filter(v => !Number.isNaN(v))
-          );
-      }
+function convertAndApply() {
+  const raw = document.getElementById("rawSource").value.trim();
+  if (!raw) {
+    alert("元データを貼ってください");
+    return;
+  }
 
-      function teamMap(lineup) {
-        const map = new Map();
-        lineup.forEach((team, i) => {
-          team.forEach((num, j) => {
-            map.set(num, { team: i, pos: j });
-          });
-        });
-        return map;
-      }
+  const rows = convertRawToRows(raw);
+  if (!rows.length) {
+    alert("変換できませんでした。元データの貼り付け範囲を広げてください。");
+    return;
+  }
 
-      function clamp(v, lo, hi) {
-        return Math.max(lo, Math.min(hi, v));
-      }
+  const text = rowsToText(rows);
+  document.getElementById("convertedText").value = text;
+  applyConvertedText(text);
+}
 
-      function scoreRacer(r, pos, maxB, maxS) {
-        const front = clamp(
-          ((r.S / Math.max(1, maxS)) * 2) + (pos?.pos === 0 ? 0.5 : 0),
-          0, 3
-        );
+function applyConverted() {
+  const text = document.getElementById("convertedText").value.trim();
+  if (!text) {
+    alert("変換結果が空です");
+    return;
+  }
+  const count = applyConvertedText(text);
+  if (!count) alert("変換結果を読み取れませんでした");
+}
 
-        const initiative = clamp(
-          ((r.B / Math.max(1, maxB)) * 2) + (r.style === '逃' ? 0.8 : r.style === '両' ? 0.4 : 0),
-          0, 3
-        );
-
-        const anchor = clamp(
-          (pos?.pos === 1 ? 1.2 : pos?.pos === 2 ? 0.6 : 0) +
-          (r.quinella / 50),
-          0, 3
-        );
-
-        const late = clamp(
-          (r.win / 40) + (r.style === '両' ? 0.8 : r.style === '追' ? 0.4 : 0),
-          0, 3
-        );
-
-        const elite = clamp(
-          (r.win / 35) + (r.quinella / 60) + (r.score / 110),
-          0, 3
-        );
-
-        const soloRisk = clamp(
-          (pos?.pos === 1 ? 1.0 : 0) +
-          (r.B >= 8 ? 0.5 : 0),
-          0, 3
-        );
-
-        const total =
-          front * 0.15 +
-          initiative * 0.25 +
-          anchor * 0.20 +
-          late * 0.15 +
-          elite * 0.20 -
-          soloRisk * 0.10;
-
-        return {
-          front,
-          initiative,
-          anchor,
-          late,
-          elite,
-          soloRisk,
-          total: Number(total.toFixed(2))
-        };
-      }
-
-      function uniq(arr) {
-        return [...new Set(arr.filter(Boolean))];
-      }
-
-      function analyzeRace(racers, lineup) {
-        if (!racers.length) throw new Error('選手データがありません。');
-
-        const maxB = Math.max(...racers.map(r => r.B));
-        const maxS = Math.max(...racers.map(r => r.S));
-        const posMap = teamMap(lineup);
-
-        const scored = racers.map(r => {
-          const pos = posMap.get(r.num);
-          return { ...r, pos, ai: scoreRacer(r, pos, maxB, maxS) };
-        });
-
-        const leaders = scored.filter(r => r.ai.initiative >= 2);
-
-        let structure = '安定戦';
-        if (leaders.length >= 3) structure = '踏み合い戦';
-        else if (leaders.length === 2) structure = '崩壊戦';
-
-        const byTotal = [...scored].sort((a, b) => b.ai.total - a.ai.total);
-        const byInitiative = [...scored].sort(
-          (a, b) => (b.ai.initiative + b.ai.front) - (a.ai.initiative + a.ai.front)
-        );
-        const byAnchor = [...scored].sort((a, b) => b.ai.anchor - a.ai.anchor);
-        const byLate = [...scored].sort((a, b) => b.ai.late - a.ai.late);
-
-        const leader = byInitiative[0];
-        const bestAnchor = byAnchor[0];
-        const bestLate = byLate[0];
-
-        let head = byTotal[0];
-        if (structure === '踏み合い戦') head = bestLate;
-        else if (
-          structure === '安定戦' &&
-          bestAnchor?.pos?.pos === 1 &&
-          leader &&
-          bestAnchor.pos?.team === leader.pos?.team
-        ) {
-          head = bestAnchor;
-        } else if (structure === '崩壊戦' && bestLate) {
-          head = bestLate;
-        }
-
-        const sameTeam = scored
-          .filter(r => r.pos?.team === head.pos?.team && r.num !== head.num)
-          .sort((a, b) => (a.pos?.pos ?? 99) - (b.pos?.pos ?? 99));
-
-        const others = scored
-          .filter(r => r.num !== head.num && !sameTeam.some(x => x.num === r.num))
-          .sort((a, b) => b.ai.total - a.ai.total);
-
-        const teamMate1 = sameTeam[0]?.num;
-        const teamMate2 = sameTeam[1]?.num;
-        const other1 = others[0]?.num;
-        const other2 = others[1]?.num;
-        const other3 = others[2]?.num;
-
-        const main = uniq([
-          `${head.num}-${teamMate1 || other1}-${teamMate2 || other2 || ''}`,
-          `${head.num}-${other1}-${teamMate1 || other2 || ''}`,
-          `${head.num}-${other1}-${other2 || teamMate1 || ''}`
-        ]).filter(v => v.split('-').length === 3 && !v.includes('undefined'));
-
-        const sub = uniq([
-          leader && leader.num !== head.num
-            ? `${leader.num}-${head.num}-${bestAnchor?.num || other1 || ''}`
-            : '',
-          bestAnchor && bestAnchor.num !== head.num
-            ? `${bestAnchor.num}-${head.num}-${leader?.num || other1 || ''}`
-            : '',
-          other2 ? `${head.num}-${other2}-${other3 || teamMate1 || ''}` : ''
-        ]).filter(v => v.split('-').length === 3 && !v.includes('undefined'));
-
-        const conclusion =
-          `${head.num}頭を本線。` +
-          `${leader?.num !== head.num ? ` 主導権候補は${leader?.num}。` : ''}` +
-          `${bestAnchor?.num && bestAnchor.num !== head.num ? ` 番手価値は${bestAnchor.num}が高め。` : ''}`;
-
-        const structureText =
-          `レース構造: ${structure} / ` +
-          `主導権候補: ${leader?.num ?? '-'} / ` +
-          `後出し最上位: ${bestLate?.num ?? '-'} / ` +
-          `番手価値上位: ${bestAnchor?.num ?? '-'}`;
-
-        return { scored: byTotal, structureText, conclusion, main, sub };
-      }
-
-      function scoreClass(total) {
-        if (total >= 1.9) return 'score-high';
-        if (total >= 1.5) return 'score-mid';
-        return 'score-low';
-      }
-
-      function render(result) {
-        document.getElementById('result').classList.remove('hidden');
-        document.getElementById('resultEmpty').classList.add('hidden');
-
-        document.getElementById('structureText').textContent = result.structureText;
-        document.getElementById('conclusionText').textContent = result.conclusion;
-
-        document.getElementById('mainLine').innerHTML =
-          result.main.map(v => `<li class="bet-main">${v}</li>`).join('');
-
-        document.getElementById('subLine').innerHTML =
-          result.sub.map(v => `<li class="bet-sub">${v}</li>`).join('');
-
-        const scoreTableBody = document.querySelector('#scoreTable tbody');
-        scoreTableBody.innerHTML = '';
-
-        result.scored.forEach(r => {
-          const tr = document.createElement('tr');
-          tr.className = scoreClass(r.ai.total);
-
-          const memo = [
-            r.pos ? `ライン${r.pos.team + 1}-${r.pos.pos + 1}番手` : '単騎',
-            r.style,
-            `得点${r.score}`
-          ].join(' / ');
-
-          tr.innerHTML = `
-            <td>${r.num}</td>
-            <td>${r.ai.front.toFixed(1)}</td>
-            <td>${r.ai.initiative.toFixed(1)}</td>
-            <td>${r.ai.anchor.toFixed(1)}</td>
-            <td>${r.ai.late.toFixed(1)}</td>
-            <td>${r.ai.elite.toFixed(1)}</td>
-            <td>${r.ai.soloRisk.toFixed(1)}</td>
-            <td>${r.ai.total.toFixed(2)}</td>
-            <td>${memo}</td>
-          `;
-          scoreTableBody.appendChild(tr);
-        });
-      }
-
-      function checkHit() {
-        const actual = (document.getElementById('actualResult').value || '').trim();
-        const hitResult = document.getElementById('hitResult');
-
-        if (!actual) {
-          hitResult.className = 'muted';
-          hitResult.textContent = '結果を入力してください。';
-          return;
-        }
-
-        if (!latestResult) {
-          hitResult.className = 'muted';
-          hitResult.textContent = '先にAI判定をしてください。';
-          return;
-        }
-
-        const allPreds = [...latestResult.main, ...latestResult.sub];
-        const isMainHit = latestResult.main.includes(actual);
-        const isSubHit = latestResult.sub.includes(actual);
-        const isHit = allPreds.includes(actual);
-
-        if (isMainHit) {
-          hitResult.className = 'hit-main';
-          hitResult.textContent = `◎ 本線的中: ${actual}`;
-        } else if (isSubHit || isHit) {
-          hitResult.className = 'hit-sub';
-          hitResult.textContent = `○ 対抗・押さえ的中: ${actual}`;
-        } else {
-          hitResult.className = 'hit-miss';
-          hitResult.textContent = `× 不的中: ${actual}`;
-        }
-      }
-
-      function fillRawSample() {
-        document.getElementById('rawInput').value = `枠
+function fillSampleRaw() {
+  document.getElementById("rawSource").value = `枠
 番
 車
 番
@@ -872,80 +772,246 @@ B
 
 3.92
 自分で何でも。`;
-      }
+}
 
-      function fillAiSample() {
-        document.getElementById('raceName').value = '小倉 ミッドナイト';
-        document.getElementById('csvInput').value =
-`車番,得点,B,S,脚質,勝率,2連対率,3連対率
-1,73.22,0,5,追,11.1,33.3,61.1
-2,71.63,2,0,両,18.7,31.2,37.5
-3,70.70,16,0,逃,33.3,44.4,51.8
-4,69.44,9,0,逃,18.7,31.2,56.2
-5,69.40,0,0,追,4.0,12.0,28.0
-6,69.06,0,0,追,5.5,16.6,33.3
-7,68.78,0,0,追,7.4,11.1,37.0`;
-        document.getElementById('lineInput').value = '3-1-5/2-7/4-6';
-      }
+function fillSamplePaste() {
+  document.getElementById("convertedText").value = `車番,得点,B,S,脚質,勝率,2連対率,3連対率
+1,88.11,0,3,追,0.0,16.6,44.4`;
+}
 
-      document.getElementById('convertBtn').addEventListener('click', () => {
-        const raw = document.getElementById('rawInput').value.trim();
-        if (!raw) {
-          document.getElementById('csvPreview').textContent = '元データを貼ってください。';
-          return;
-        }
+function fillSampleLearning() {
+  document.getElementById("learningMemo").value = `結果 2-7-1
+番手7を軽視
+5の逃げを買いすぎ
+1の残り目を見落とし
+追込残り
+番手強い`;
+}
 
-        const csv = convertRawToCsv(raw);
-        if (!csv) {
-          document.getElementById('csvPreview').textContent =
-            '変換できませんでした。元データの貼り付け範囲を広げてください。';
-          return;
-        }
+function runAI() {
+  document.getElementById("learnSummary").textContent = getLearningSummary();
+  const learn = cumulativeLearning;
+  const parsed = parseLine(document.getElementById("line").value);
+  const pos = parsed.map;
+  const sizes = parsed.sizes;
+  const mode = document.getElementById("mode").value;
 
-        document.getElementById('csvPreview').textContent = csv;
-        document.getElementById('csvInput').value = csv;
-      });
+  let raw = [];
+  for (let i = 1; i <= 9; i++) {
+    const score = parseFloat(document.getElementById("score" + i).value);
+    if (isNaN(score)) continue;
 
-      document.getElementById('sampleRawBtn').addEventListener('click', fillRawSample);
-      document.getElementById('sampleBtn').addEventListener('click', fillAiSample);
+    const b = parseFloat(document.getElementById("b" + i).value) || 0;
+    const s = parseFloat(document.getElementById("s" + i).value) || 0;
+    const win = parseFloat(document.getElementById("win" + i).value) || 0;
+    const ren2 = parseFloat(document.getElementById("ren2" + i).value) || 0;
+    const ren3 = parseFloat(document.getElementById("ren3" + i).value) || 0;
+    const style = getStyle(i);
+    const p = pos[String(i)] || "単騎";
 
-      document.getElementById('analyzeBtn').addEventListener('click', () => {
-        try {
-          const racers = parseCSV(document.getElementById('csvInput').value || '');
-          const lineup = parseLineup(document.getElementById('lineInput').value || '');
+    raw.push({ car: i, score, b, s, win, ren2, ren3, style, pos: p });
+  }
 
-          if (!racers.length || !lineup.length) {
-            alert('CSVと並びを入力してください。');
-            return;
-          }
+  if (!raw.length) {
+    alert("入力してください");
+    return;
+  }
 
-          const result = analyzeRace(racers, lineup);
-          latestResult = result;
-          render(result);
-        } catch (e) {
-          alert('エラー: ' + e.message);
-        }
-      });
+  const leadInfo = leadCounter(raw);
+  const md = midnightAdjust(mode, raw);
 
-      document.getElementById('checkResultBtn').addEventListener('click', checkHit);
+  const baseArr = raw.map(x => {
+    const posBase =
+      x.pos === "先行" ? 12 :
+      x.pos === "番手" ? (25 + learn.bankerBoost) :
+      x.pos === "3番手" ? 8 : 0;
 
-      document.getElementById('clearBtn').addEventListener('click', () => {
-        latestResult = null;
-        document.getElementById('raceName').value = '';
-        document.getElementById('rawInput').value = '';
-        document.getElementById('csvInput').value = '';
-        document.getElementById('csvPreview').textContent = 'ここにCSVが出ます';
-        document.getElementById('lineInput').value = '';
-        document.getElementById('actualResult').value = '';
-        document.getElementById('hitResult').className = 'muted';
-        document.getElementById('hitResult').textContent = '結果を入れて「的中チェック」を押してください。';
-        document.getElementById('result').classList.add('hidden');
-        document.getElementById('resultEmpty').classList.remove('hidden');
-        document.getElementById('mainLine').innerHTML = '';
-        document.getElementById('subLine').innerHTML = '';
-        document.querySelector('#scoreTable tbody').innerHTML = '';
-      });
+    const styleBase =
+      x.style === "逃" ? (8 - learn.runnerPenalty) :
+      x.style === "追" ? (12 + learn.chaserThirdBoost * 0.5) : 10;
+
+    const rateBase = x.win * 0.15 + x.ren2 * 0.20 + x.ren3 * 0.12;
+    const loneAdj = x.pos === "単騎" ? (-8 - learn.lonePenalty) : 0;
+    const chase3 = (x.style === "追" && (x.pos === "3番手" || x.pos === "単騎")) ? learn.chaserThirdBoost : 0;
+    const chaosAdj = leadInfo.count >= 3 ? learn.chaosBoost : 0;
+
+    const aiBase =
+      x.score +
+      x.b * 3.0 +
+      x.s * 1.8 +
+      posBase +
+      styleBase +
+      rateBase +
+      loneAdj +
+      chase3 +
+      chaosAdj +
+      (md.bonus[x.car] || 0);
+
+    return { ...x, aiBase };
+  });
+
+  let senkou = 0, sashi = 0, makuri = 0;
+  baseArr.forEach(x => {
+    if (x.pos === "先行") senkou += x.score + x.b * 5 + x.s * 3 + x.win * 0.12 + x.ren2 * 0.18;
+    if (x.pos === "番手") sashi += x.score + x.ren2 * 0.30 + x.ren3 * 0.15 + 20 + learn.bankerBoost;
+    if (x.style === "逃" || x.style === "両") makuri += x.score + x.b * 4 + x.s * 1.2 + 10 - (x.style === "逃" ? learn.runnerPenalty : 0);
+  });
+
+  if (leadInfo.count >= 3) {
+    senkou *= 0.75;
+    makuri *= 1.25;
+  }
+  if (sizes.every(x => x <= 2)) {
+    makuri *= 1.10;
+    sashi *= 1.08;
+  }
+
+  let scenario = "先行";
+  if (sashi > senkou && sashi > makuri) scenario = "差し";
+  else if (makuri > senkou) scenario = "捲り";
+
+  let arr = baseArr.map(x => {
+    let scenarioBonus = 0;
+    if (scenario === "先行") {
+      if (x.pos === "先行") scenarioBonus += 18;
+      if (x.pos === "番手") scenarioBonus += 14;
+      if (x.pos === "3番手") scenarioBonus += 5;
+    } else if (scenario === "差し") {
+      if (x.pos === "番手") scenarioBonus += 26;
+      if (x.pos === "先行") scenarioBonus += 10;
+      if (x.style === "追") scenarioBonus += 8;
+    } else if (scenario === "捲り") {
+      if (x.style === "両") scenarioBonus += 16;
+      if (x.style === "逃") scenarioBonus += 12;
+      if (x.pos === "番手") scenarioBonus += 6;
+      if (x.pos === "先行") scenarioBonus -= 8;
+    }
+    return { ...x, ai: x.aiBase + scenarioBonus };
+  }).sort((a, b) => b.ai - a.ai);
+
+  let head = null, second = null;
+  if (scenario === "先行") {
+    head = arr.find(x => x.pos === "先行")?.car || arr[0]?.car;
+    second = arr.find(x => x.pos === "番手")?.car || arr.find(x => x.car !== head)?.car;
+  } else if (scenario === "差し") {
+    head = arr.find(x => x.pos === "番手")?.car || arr[0]?.car;
+    second = arr.find(x => x.pos === "先行")?.car || arr.find(x => x.car !== head)?.car;
+  } else {
+    head = arr[0]?.car;
+    second = arr.find(x => x.car !== head && (x.pos === "番手" || x.pos === "先行"))?.car || arr.find(x => x.car !== head)?.car;
+  }
+
+  const headObj = arr.find(x => x.car === head) || arr[0];
+  const arranged = [headObj, ...arr.filter(x => x.car !== headObj.car)];
+  const judged = roiJudge(arranged);
+  const roi = judged[0];
+  const act = judged[1];
+  const tenkai = tenkaiPredictScenario(scenario, head, second);
+  const collapse = collapseWarn(arr, sizes);
+  const count = ticketCount(act, collapse, leadInfo.count);
+  const trust = calcTrust(arranged, leadInfo, collapse, mode, scenario);
+  const top = headObj;
+
+  document.getElementById("honmei").textContent = head;
+  document.getElementById("hero").textContent = head;
+  document.getElementById("heroSub").textContent = `${scenario} / ${roi}`;
+  document.getElementById("roi").textContent = roi;
+  document.getElementById("act").textContent = act;
+  document.getElementById("tenkai").textContent = `展開予測 ${tenkai}`;
+  document.getElementById("collapse").textContent = `ライン崩れ警告 ${collapse}`;
+  document.getElementById("midAdj").textContent = `ミッドナイト補正 ${md.label}`;
+  document.getElementById("ticketCount").textContent = `車券点数 ${count}点`;
+  document.getElementById("leadCount").textContent = leadInfo.label;
+  document.getElementById("trustFill").style.width = trust.score + "%";
+  document.getElementById("trustStars").textContent = trust.stars;
+  document.getElementById("trustText").textContent = `本命信頼度 ${trust.text} (${trust.score}%)`;
+  document.getElementById("dangerAlert").innerHTML = dangerText(top, trust, leadInfo, collapse);
+
+  document.getElementById("rank").innerHTML = arr.map((r, i) =>
+    `<tr><td>${i + 1}</td><td>${r.car}</td><td>${r.ai.toFixed(1)}</td><td>${r.pos}</td></tr>`
+  ).join("");
+
+  const thirds = arr.filter(x => x.car !== head && x.car !== second).slice(0, 4).map(x => x.car);
+  let main = [];
+  thirds.forEach(t => {
+    main.push(`${head}-${second}-${t}`);
+    main.push(`${head}-${t}-${second}`);
+  });
+
+  if (scenario === "捲り") {
+    const lineMate = arr.find(x => x.car !== head && x.pos === "番手");
+    if (lineMate) main.unshift(`${head}-${lineMate.car}-${second}`);
+  }
+
+  main = [...new Set(main)].slice(0, Math.max(3, count));
+
+  const holeCandidate = arr.find(x => x.car !== head && x.car !== second && (x.style === "追" || x.pos === "3番手"))?.car;
+
+  document.getElementById("bets").innerHTML = main.map(x => `<span class="badge bet">${x}</span>`).join("");
+  document.getElementById("hole").innerHTML = holeCandidate ? `<span class="badge warn">${head}-${holeCandidate}-${second}</span>` : "";
+
+  document.getElementById("comment").textContent =
+    `展開:${scenario} / 先行:${senkou.toFixed(1)} 差し:${sashi.toFixed(1)} 捲り:${makuri.toFixed(1)} / 回収率AI:${roi} / 判断:${act} / ${getLearningSummary()}`;
+}
+
+function clearAll() {
+  document.getElementById("race").value = "";
+  document.getElementById("line").value = "";
+  document.getElementById("mode").value = "normal";
+  document.getElementById("rawSource").value = "";
+  document.getElementById("convertedText").value = "";
+  document.getElementById("learningMemo").value = "";
+  document.getElementById("learnSummary").textContent = getLearningSummary();
+
+  for (let i = 1; i <= 9; i++) {
+    ["score", "b", "s", "win", "ren2", "ren3"].forEach(k => {
+      document.getElementById(k + i).value = "";
     });
-  </script>
+    const radio = document.querySelector(`input[name="style${i}"][value="両"]`);
+    if (radio) radio.checked = true;
+  }
+
+  document.getElementById("honmei").textContent = "-";
+  document.getElementById("hero").textContent = "-";
+  document.getElementById("heroSub").textContent = "KEIRIN AI 完全版";
+  document.getElementById("roi").textContent = "-";
+  document.getElementById("act").textContent = "-";
+  document.getElementById("rank").innerHTML = "";
+  document.getElementById("bets").innerHTML = "";
+  document.getElementById("hole").innerHTML = "";
+  document.getElementById("tenkai").textContent = "展開予測 -";
+  document.getElementById("collapse").textContent = "ライン崩れ警告 -";
+  document.getElementById("midAdj").textContent = "ミッドナイト補正 -";
+  document.getElementById("ticketCount").textContent = "車券点数 -";
+  document.getElementById("leadCount").textContent = "先行人数 -";
+  document.getElementById("trustFill").style.width = "0%";
+  document.getElementById("trustStars").textContent = "☆☆☆☆☆";
+  document.getElementById("trustText").textContent = "信頼度 -";
+  document.getElementById("dangerAlert").innerHTML = "";
+  document.getElementById("comment").textContent = "入力してAI予想を押してください。";
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("riders").innerHTML =
+    Array.from({ length: 9 }, (_, i) => riderHTML(i + 1)).join("");
+
+  document.getElementById("btnAI")?.addEventListener("click", runAI);
+  document.getElementById("btnClear")?.addEventListener("click", clearAll);
+  document.getElementById("btnConvertApply")?.addEventListener("click", convertAndApply);
+  document.getElementById("btnApplyConverted")?.addEventListener("click", applyConverted);
+  document.getElementById("btnSampleRaw")?.addEventListener("click", fillSampleRaw);
+  document.getElementById("btnSamplePaste")?.addEventListener("click", fillSamplePaste);
+  document.getElementById("btnApplyLearning")?.addEventListener("click", () => {
+    applyLearningMemo(true);
+    alert("学習メモを蓄積しました。");
+  });
+  document.getElementById("btnSampleLearning")?.addEventListener("click", fillSampleLearning);
+  document.getElementById("btnResetLearning")?.addEventListener("click", resetLearning);
+  document.getElementById("btnExportLearning")?.addEventListener("click", exportLearning);
+
+  loadLearning();
+  document.getElementById("learnSummary").textContent = getLearningSummary();
+});
+</script>
 </body>
 </html>
