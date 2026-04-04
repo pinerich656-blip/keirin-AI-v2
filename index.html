@@ -441,17 +441,30 @@
         return rows;
       }
 
-      function convertLinkedStyle(lines) {
+   function convertLinkedStyle(lines) {
   const rows = [];
 
   for (let i = 0; i < lines.length; i++) {
     const car = normalizeCar(lines[i]);
     if (car === null) continue;
 
-    const dataLine = lines[i + 1] || '';
+    const candidates = [
+      lines[i + 1] || '',
+      lines[i + 2] || '',
+      lines[i + 3] || '',
+      lines[i + 4] || ''
+    ];
+
+    let dataLine = '';
+    for (const line of candidates) {
+      if (/\d{2,3}\.\d{2}/.test(line) && /[逃追両]/.test(line)) {
+        dataLine = line;
+        break;
+      }
+    }
+
     if (!dataLine) continue;
 
-    // 得点 + 脚質 抽出
     const m = dataLine.match(/(\d{2,3}\.\d{2})(逃|追|両)(.*)/);
     if (!m) continue;
 
@@ -459,19 +472,11 @@
     const style = m[2];
     const tail = m[3];
 
-    // 数字を全部抽出
     const nums = tail.match(/\d+\.\d+|\d+/g) || [];
-
-    // 最低限13個必要
     if (nums.length < 13) continue;
 
-    const nige = Number(nums[0]);
-    const makuri = Number(nums[1]);
-    const sashi = Number(nums[2]);
-    const mark = Number(nums[3]);
     const s = Number(nums[4]);
     const b = Number(nums[5]);
-
     const win = Number(nums[10]);
     const ren2 = Number(nums[11]);
     const ren3 = Number(nums[12]);
@@ -490,7 +495,6 @@
 
   return rows;
 }
-
       function formatVal(v, digits = 2) {
         if (v === '' || v === null || typeof v === 'undefined') return '';
         const n = Number(v);
