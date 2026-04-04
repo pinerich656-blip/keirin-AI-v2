@@ -464,33 +464,15 @@
           const score = parseFloat(scoreLine);
           const style = styleLine;
 
-          const nums = [];
-          let j = i + 7;
-
-          while (j < lines.length && nums.length < 13) {
-            if (isNum(lines[j])) nums.push(parseFloat(lines[j]));
-            j++;
-          }
-
-          let s = '';
-          let b = '';
-          let win = '';
-          let ren2 = '';
-          let ren3 = '';
-
-          if (nums.length >= 6) {
-            s = nums[4];
-            b = nums[5];
-          }
-
-          if (nums.length >= 13) {
-            win = nums[10];
-            ren2 = nums[11];
-            ren3 = nums[12];
-          }
+          const s = isNum(lines[i + 11]) ? parseFloat(lines[i + 11]) : '';
+          const b = isNum(lines[i + 12]) ? parseFloat(lines[i + 12]) : '';
+          const win = isNum(lines[i + 17]) ? parseFloat(lines[i + 17]) : '';
+          const ren2 = isNum(lines[i + 18]) ? parseFloat(lines[i + 18]) : '';
+          const ren3 = isNum(lines[i + 19]) ? parseFloat(lines[i + 19]) : '';
 
           rows.push({ car, score, b, s, style, win, ren2, ren3 });
-          i = j - 1;
+
+          i = i + 19;
         }
 
         return rows;
