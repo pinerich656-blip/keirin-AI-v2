@@ -346,78 +346,39 @@
     document.addEventListener('DOMContentLoaded', () => {
       let latestResult = null;
 
-      function splitLines(text) {
-        return text.split(/\r?\n/).map(s => s.replace(/\u00A0/g, ' ').trim()).filter(Boolean);
-      }
+    function splitLines(text) {
+  return text
+    .replace(/\u00A0/g, " ")
+    .replace(/\t/g, "\n")
+    .replace(/　/g, " ")
+    .split(/\r?\n/)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
 
-      function isNum(s) {
-        return /^-?\d+(\.\d+)?$/.test(s);
-      }
-
-      function normalizeCar(raw) {
-        const s = String(raw).trim();
-        if (/^([1-9])\1$/.test(s)) return parseInt(s[0], 10);
-        if (/^[1-9]$/.test(s)) return parseInt(s, 10);
-        return null;
-      }
-
-      function detectStyle(line) {
-        if (line.includes('逃')) return '逃';
-        if (line.includes('追')) return '追';
-        if (line.includes('両')) return '両';
-        return '両';
-      }
-
-      function detectScore(line) {
-        const m = line.match(/([◎○▲△×注]?)(\d{2,3}\.\d{2})/);
-        return m ? parseFloat(m[2]) : 0;
-      }
-
-      function detectBandSFromLinked(line, style) {
-        const re = new RegExp(style + '([0-9]{6,})');
-        const m = line.match(re);
-        if (!m) return { b: '', s: '' };
-
-        const digits = m[1];
-        const c1 = parseInt(digits.slice(0, 2), 10);
-        const c2 = parseInt(digits.slice(2, 4), 10);
-        const c3 = parseInt(digits.slice(4, 6), 10);
-        const candidates = [c1, c2, c3].filter(x => !isNaN(x) && x >= 0 && x <= 30);
-
-        let b = '', s = '';
-        if (style === '逃') {
-          b = candidates.length ? Math.max(...candidates) : '';
-          s = candidates.length > 1 ? Math.min(...candidates.slice(0, 2)) : '';
-        } else if (style === '追') {
-          b = '';
-          s = candidates.length ? Math.min(...candidates) : '';
-        } else {
-          b = candidates.length ? candidates[0] : '';
-          s = candidates.length > 1 ? candidates[1] : '';
-        }
-        return { b, s };
-      }
-
-      function convertTableStyle(lines) {
+function convertTableStyle(lines) {
   const rows = [];
 
   for (let i = 0; i < lines.length; i++) {
     const carNo = normalizeCar(lines[i]);
     if (carNo === null) continue;
 
-    // 近い範囲でプロフィール・得点・脚質を探す
     let profileIdx = -1;
     let scoreIdx = -1;
     let styleIdx = -1;
 
-    for (let j = i; j < Math.min(i + 8, lines.length); j++) {
-      if (profileIdx === -1 && (lines[j] || '').includes('/')) {
+    for (let j = i; j < Math.min(i + 12, lines.length); j++) {
+      const line = lines[j] || "";
+
+      if (profileIdx === -1 && line.includes("/")) {
         profileIdx = j;
       }
-      if (scoreIdx === -1 && isNum(lines[j]) && /\d{2,3}\.\d{2}/.test(lines[j])) {
+
+      if (scoreIdx === -1 && /^\d{2,3}\.\d{2}$/.test(line)) {
         scoreIdx = j;
       }
-      if (styleIdx === -1 && ['逃', '追', '両'].includes(lines[j])) {
+
+      if (styleIdx === -1 && /^(逃|追|両)$/.test(line)) {
         styleIdx = j;
       }
     }
@@ -428,9 +389,9 @@
     const score = parseFloat(lines[scoreIdx]);
     const style = lines[styleIdx];
 
-    // 脚質の後ろから数値を13個集める
     const nums = [];
     let k = styleIdx + 1;
+
     while (k < lines.length && nums.length < 13) {
       if (isNum(lines[k])) nums.push(parseFloat(lines[k]));
       k++;
@@ -438,22 +399,15 @@
 
     if (nums.length < 13) continue;
 
-    // [逃,捲,差,マ,S,B,1着,2着,3着,着外,勝率,2連対率,3連対率]
-    const s = nums[4];
-    const b = nums[5];
-    const win = nums[10];
-    const ren2 = nums[11];
-    const ren3 = nums[12];
-
     rows.push({
       car: carNo,
       score,
-      b,
-      s,
+      b: nums[5],
+      s: nums[4],
       style,
-      win,
-      ren2,
-      ren3
+      win: nums[10],
+      ren2: nums[11],
+      ren3: nums[12]
     });
 
     i = k - 1;
@@ -470,15 +424,16 @@ function convertLinkedStyle(lines) {
     if (car === null) continue;
 
     const candidates = [
-      lines[i + 1] || '',
-      lines[i + 2] || '',
-      lines[i + 3] || '',
-      lines[i + 4] || ''
+      lines[i + 1] || "",
+      lines[i + 2] || "",
+      lines[i + 3] || "",
+      lines[i + 4] || "",
+      lines[i + 5] || ""
     ];
 
-    let dataLine = '';
+    let dataLine = "";
     for (const line of candidates) {
-      if (/\d{2,3}\.\d{2}/.test(line) && /[逃追両]/.test(line)) {
+      if (/\d{2,3}\.\d{2}/.test(line) && /(逃|追|両)/.test(line)) {
         dataLine = line;
         break;
       }
@@ -486,76 +441,99 @@ function convertLinkedStyle(lines) {
 
     if (!dataLine) continue;
 
-    const m = dataLine.match(/(\d{2,3}\.\d{2})(逃|追|両)(.*)/);
+    const m = dataLine.match(/([◎○▲△×注]?)(\d{2,3}\.\d{2})(逃|追|両)(.*)/);
     if (!m) continue;
 
-    const score = parseFloat(m[1]);
-    const style = m[2];
-    const tail = m[3];
+    const score = parseFloat(m[2]);
+    const style = m[3];
+    const tail = m[4] || "";
 
     const nums = tail.match(/\d+\.\d+|\d+/g) || [];
     if (nums.length < 13) continue;
 
-    const s = Number(nums[4]);
-    const b = Number(nums[5]);
-    const win = Number(nums[10]);
-    const ren2 = Number(nums[11]);
-    const ren3 = Number(nums[12]);
-
     rows.push({
       car,
       score,
-      b,
-      s,
+      b: Number(nums[5]),
+      s: Number(nums[4]),
       style,
-      win,
-      ren2,
-      ren3
+      win: Number(nums[10]),
+      ren2: Number(nums[11]),
+      ren3: Number(nums[12])
     });
   }
 
   return rows;
 }
-      function formatVal(v, digits = 2) {
-        if (v === '' || v === null || typeof v === 'undefined') return '';
-        const n = Number(v);
-        return Number.isFinite(n) ? n.toFixed(digits) : '';
-      }
 
-      function convertRawToCsv(raw) {
+function convertRawToCsv(raw) {
   const lines = splitLines(raw);
 
   let rows = convertTableStyle(lines);
+
   if (!rows.length) {
     rows = convertLinkedStyle(lines);
   }
 
+  // 最終フォールバック:
+  // 元データ全体を1本の文字列として見て、車番ブロックを抽出
+  if (!rows.length) {
+    const joined = lines.join("\n");
+
+    const blockRegex = /(?:^|\n)([1-9])\n(?:[1-9]\n)?([^\n]+)\n([^\n]*\/[^\n]*)\n([◎○▲△×注]?)\n?(\d{2,3}\.\d{2})\n?(逃|追|両)\n?([\s\S]*?)(?=(?:\n[1-9]\n(?:[1-9]\n)?[^\n]+\n[^\n]*\/)|$)/g;
+    let m;
+
+    while ((m = blockRegex.exec(joined)) !== null) {
+      const car = Number(m[1]);
+      const score = Number(m[5]);
+      const style = m[6];
+      const tail = m[7] || "";
+
+      const nums = tail.match(/\d+\.\d+|\d+/g) || [];
+      if (nums.length < 13) continue;
+
+      rows.push({
+        car,
+        score,
+        b: Number(nums[5]),
+        s: Number(nums[4]),
+        style,
+        win: Number(nums[10]),
+        ren2: Number(nums[11]),
+        ren3: Number(nums[12])
+      });
+    }
+  }
+
   const rowMap = new Map();
   rows.forEach(r => {
-    if (!rowMap.has(r.car) || Number(r.score) > 0) {
+    if (
+      r &&
+      Number.isFinite(r.car) &&
+      Number.isFinite(r.score) &&
+      ["逃", "追", "両"].includes(r.style)
+    ) {
       rowMap.set(r.car, r);
     }
   });
 
   rows = [...rowMap.values()].sort((a, b) => a.car - b.car);
 
-  if (!rows.length) return '';
+  if (!rows.length) return "";
 
-  const result = [
-    '車番,得点,B,S,脚質,勝率,2連対率,3連対率',
+  return [
+    "車番,得点,B,S,脚質,勝率,2連対率,3連対率",
     ...rows.map(r => [
       r.car,
       formatVal(r.score, 2),
-      r.b === '' ? '' : r.b,
-      r.s === '' ? '' : r.s,
+      r.b === "" ? "" : r.b,
+      r.s === "" ? "" : r.s,
       r.style,
       formatVal(r.win, 1),
       formatVal(r.ren2, 1),
       formatVal(r.ren3, 1)
-    ].join(','))
-  ];
-
-  return result.join('\n');
+    ].join(","))
+  ].join("\n");
 }
 
       function parseCSV(text) {
