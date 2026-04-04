@@ -378,9 +378,6 @@ function convertTableStyle(lines) {
   const rows = [];
 
   for (let i = 0; i < lines.length; i++) {
-    const carNo = normalizeCar(lines[i]);
-    if (carNo === null) continue;
-
     let profileIdx = -1;
     let scoreIdx = -1;
     let styleIdx = -1;
@@ -403,6 +400,18 @@ function convertTableStyle(lines) {
 
     if (profileIdx === -1 || scoreIdx === -1 || styleIdx === -1) continue;
     if (!(profileIdx < scoreIdx && scoreIdx < styleIdx)) continue;
+
+    // 車番判定
+    // profile の直前にある 1桁数字を優先
+    // 2個あるときは後ろを車番として採用
+    const carCandidates = [];
+    for (let p = Math.max(0, profileIdx - 2); p < profileIdx; p++) {
+      const n = normalizeCar(lines[p]);
+      if (n !== null) carCandidates.push(n);
+    }
+
+    if (!carCandidates.length) continue;
+    const carNo = carCandidates[carCandidates.length - 1];
 
     const score = parseFloat(lines[scoreIdx]);
     const style = lines[styleIdx];
@@ -433,7 +442,6 @@ function convertTableStyle(lines) {
 
   return rows;
 }
-
 function convertLinkedStyle(lines) {
   const rows = [];
 
