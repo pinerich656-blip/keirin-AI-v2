@@ -249,9 +249,11 @@
       <textarea id="rawInput" rows="12" placeholder="元データをそのまま貼り付け"></textarea>
 
       <div class="buttonRow">
+        <button id="loadGithubBtn" type="button" style="background: #059669;">GitHubから最新読込</button>
         <button id="convertBtn" type="button">変換する</button>
         <button id="sampleRawBtn" type="button" class="secondary">変換サンプル</button>
       </div>
+
 
       <h3>変換結果（CSV）</h3>
       <div id="csvPreview">ここにCSVが出ます</div>
@@ -958,7 +960,7 @@ B
         }
       });
 
-      document.getElementById('checkResultBtn').addEventListener('click', checkHit);
+            document.getElementById('checkResultBtn').addEventListener('click', checkHit);
 
       document.getElementById('clearBtn').addEventListener('click', () => {
         latestResult = null;
@@ -976,7 +978,42 @@ B
         document.getElementById('subLine').innerHTML = '';
         document.querySelector('#scoreTable tbody').innerHTML = '';
       });
-    });
+
+      // --- GitHubから自動で読み込む機能 ---
+      document.getElementById('loadGithubBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('loadGithubBtn');
+        const user = 'pinerich656-blip';
+        const repo = 'hyper-keirin';
+        // キャッシュを避けるためにタイムスタンプ(?t=...)を追加
+        const url = `https://raw.githubusercontent.com/${user}/${repo}/main/data.json?t=${new Date().getTime()}`;
+
+        try {
+          btn.textContent = '読込中...';
+          btn.disabled = true;
+
+          const response = await fetch(url);
+          if (!response.ok) throw new Error('GitHubからデータが取れませんでした');
+          
+          const rawContent = await response.text();
+          
+          document.getElementById('rawInput').value = rawContent;
+          document.getElementById('convertBtn').click();
+          
+          btn.textContent = '読込成功！';
+          setTimeout(() => { 
+            btn.textContent = 'GitHubから最新読込'; 
+            btn.disabled = false; 
+          }, 2000);
+
+        } catch (error) {
+          alert('エラー: ' + error.message);
+          btn.textContent = '読込失敗';
+          btn.disabled = false;
+        }
+      });
+      // -----------------------------------
+
+    }); // DOMContentLoadedの閉じ
   </script>
 </body>
 </html>
